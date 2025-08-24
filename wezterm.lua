@@ -16,33 +16,51 @@ config.window_decorations = "TITLE | RESIZE"
 
 -- KEYBINDINGS
 config.keys = {
+
+  -- Add new tab
   {
     key = "t",
     mods = "CTRL",
     action = wezterm.action.SpawnTab("CurrentPaneDomain"),
   },
+  
+  -- Close tab and window
   {
     key = "w",
     mods = "CTRL",
     action = wezterm.action_callback(function(window, pane)
       local tab = window:active_tab()
       if #tab:panes() > 1 then
-        -- Kalau ada lebih dari 1 pane → tutup pane
+        -- if more than 1 pane → close pane
         window:perform_action(wezterm.action.CloseCurrentPane { confirm = true }, pane)
       else
-        -- Kalau hanya ada 1 pane → tutup tab
+        -- if just 1 pane → close tab
         window:perform_action(wezterm.action.CloseCurrentTab { confirm = true }, pane)
       end
     end),
   },
+  
+  -- Add horizontal pane
   { key="o", mods="CTRL|ALT", action=wezterm.action{SplitHorizontal={domain="CurrentPaneDomain"}} },
+  -- Add vertical pane
   { key="p", mods="CTRL|ALT", action=wezterm.action{SplitVertical={domain="CurrentPaneDomain"}} },
+  
+  -- Copy to clipboard
+  { key="c", mods="CTRL", action=wezterm.action{CopyTo="Clipboard"} },
+  -- Paste from clipboard
+  { key="v", mods="CTRL", action=wezterm.action{PasteFrom="Clipboard"} },
 
-  { key = "a", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Left" },
-  { key = "d", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Right" },
-  { key = "w", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Up" },
-  { key = "s", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Down" },
-  { key = "f", mods = "CTRL", action = wezterm.action.Search({ CaseSensitiveString = "" }) },
+  -- Move to other pane on the same tab
+  { key = "LeftArrow", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Left" },
+  { key = "RightArrow", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Right" },
+  { key = "UpArrow", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Up" },
+  { key = "DownArrow", mods = "ALT", action = wezterm.action.ActivatePaneDirection "Down" },
+
+  -- Search (case sensitive)
+  { key = "f", mods = "CTRL | SHIFT", action = wezterm.action.Search({ CaseSensitiveString = "" }) },
+  
+  -- New Window
+  { key = 'n', mods = "CTRL | SHIFT", action = wezterm.action.SpawnWindow },
 
 
   -- Rename tab (CTRL+SHIFT+R)
